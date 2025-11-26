@@ -1,0 +1,13 @@
+[Unit]
+Description=E-Ink DND Display
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=pi
+ExecStart=/home/pi/epaper-dnd/run_dnd_display.sh
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
