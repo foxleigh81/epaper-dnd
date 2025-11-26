@@ -12,6 +12,7 @@ export HA_MIN_REFRESH_SECONDS=10
 cd "$HOME/epaper-dnd"
 
 # Activate virtual environment (required for Raspberry Pi OS Bookworm+)
+# Comment out the line below if you installed dependencies system-wide (see README)
 source "$HOME/dnd-venv/bin/activate"
 
 python3 epaper_dnd.py

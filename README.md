@@ -49,7 +49,9 @@ sudo python3 epd_7in5bc_test.py
 
 ### 3. Install Python dependencies
 
-On **Raspberry Pi OS Bookworm** or newer:
+#### Option A: Using a virtual environment (required for Bookworm+)
+
+Raspberry Pi OS Bookworm and newer block system-wide pip installs, so you must use a venv:
 
 ```bash
 cd ~
@@ -58,17 +60,21 @@ source ~/dnd-venv/bin/activate
 pip install pillow requests websockets
 ```
 
-On older versions:
+#### Option B: Without a virtual environment (Bullseye and older only)
+
+On older versions you can install system-wide with pip:
 
 ```bash
 sudo pip3 install pillow requests websockets
 ```
 
-If you don't want to use a python venv, you can also install the dependencies directly with apt:
+Or use apt (works on any version):
 
 ```bash
 sudo apt install python3-pillow python3-requests python3-websockets
 ```
+
+> **Note:** If using Option B, edit `run_dnd_display.sh` and comment out or delete the `source "$HOME/dnd-venv/bin/activate"` line.
 
 ### 4. Clone this repository
 
