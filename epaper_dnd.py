@@ -108,13 +108,23 @@ def render_state_image(width: int, height: int, state: str):
     ts_y = height - ts_h - 8
 
     if state == "on":
-        # DND/Busy: red background with a white circle and red bar (no-entry symbol)
+        # DND/Busy: red background with no-entry symbol + DND text
         draw_r.rectangle((0, 0, width, height), fill=0)
 
         circle_diameter = int(min(width, height) * 0.4)
-        cx = width // 2
         cy = height // 2
 
+        # Measure DND text
+        dnd_text = "DND"
+        dnd_tw, dnd_th = measure(dnd_text, font)
+        spacing = int(dnd_th * 0.4)
+
+        # Calculate total width and center the symbol + text combination
+        total_width = circle_diameter + spacing + dnd_tw
+        start_x = (width - total_width) // 2
+
+        # Position circle (centered vertically, offset horizontally)
+        cx = start_x + circle_diameter // 2
         left = cx - circle_diameter // 2
         top = cy - circle_diameter // 2
         right = cx + circle_diameter // 2
@@ -132,6 +142,11 @@ def render_state_image(width: int, height: int, state: str):
         bar_right = right - bar_margin
         draw_r.rectangle((bar_left, bar_top, bar_right, bar_bottom), fill=0)
 
+        # DND text (white on red, vertically centered with symbol)
+        dnd_tx = start_x + circle_diameter + spacing
+        dnd_ty = (height - dnd_th) // 2
+        draw_r.text((dnd_tx, dnd_ty), dnd_text, font=font, fill=1)
+
         # Thin black border for framing
         draw_b.rectangle((3, 3, width - 4, height - 4), outline=0)
 
@@ -139,13 +154,41 @@ def render_state_image(width: int, height: int, state: str):
         draw_r.text((ts_x, ts_y), ts_text, font=small_font, fill=1)
 
     else:
-        # Free: black background with white FREE text and white timestamp
+        # Free: black background with checkmark + FREE text and white timestamp
         draw_b.rectangle((0, 0, width, height), fill=0)
 
         text = "FREE"
         tw, th = measure(text, font)
-        tx = (width - tw) // 2
+
+        # Checkmark dimensions (sized relative to text height)
+        check_size = int(th * 0.8)
+        spacing = int(th * 0.4)
+        total_width = check_size + spacing + tw
+
+        # Center the checkmark + text combination
+        start_x = (width - total_width) // 2
         ty = (height - th) // 2
+
+        # Draw checkmark
+        check_x = start_x
+        check_y = ty + th // 2  # Vertically center checkmark with text
+        line_width = max(4, check_size // 8)
+
+        # Short leg of checkmark (going down-right)
+        x1 = check_x
+        y1 = check_y
+        x2 = check_x + check_size // 3
+        y2 = check_y + check_size // 3
+
+        # Long leg of checkmark (going up-right)
+        x3 = check_x + check_size
+        y3 = check_y - check_size // 2
+
+        draw_b.line((x1, y1, x2, y2), fill=1, width=line_width)
+        draw_b.line((x2, y2, x3, y3), fill=1, width=line_width)
+
+        # Draw FREE text after checkmark
+        tx = start_x + check_size + spacing
         draw_b.text((tx, ty), text, font=font, fill=1)
 
         draw_b.text((ts_x, ts_y), ts_text, font=small_font, fill=1)
