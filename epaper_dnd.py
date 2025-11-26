@@ -68,7 +68,7 @@ def get_font(height: int):
     """Get the main font scaled to display height."""
     try:
         path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-        size = max(18, height // 8)
+        size = max(18, height // 4)
         return ImageFont.truetype(path, size=size)
     except Exception:
         return ImageFont.load_default()
