@@ -109,6 +109,8 @@ export HA_MIN_REFRESH_SECONDS=10 (or whatever you want it to be)
 python3 epaper_dnd.py
 ```
 
+> NOTE: You could also add these to your `.bashrc` file
+
 ### 7. Run on boot (optional)
 
 Copy the systemd service file and launcher script:
@@ -121,7 +123,7 @@ sudo systemctl enable dnd-display
 sudo systemctl start dnd-display
 ```
 
-Edit `run_dnd_display.sh` with your Home Assistant URL and token first.
+Edit `run_dnd_display.sh` with your Home Assistant URL and token first. (Unless you added them to your .bashrc file in which case, delete those lines)
 
 ## Environment variables
 
