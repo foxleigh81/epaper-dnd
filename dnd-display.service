@@ -4,9 +4,12 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=%h/epaper-dnd/run_dnd_display.sh
+# Replace YOUR_USERNAME with your actual username (run 'whoami' to check)
+User=YOUR_USERNAME
+Environment="HOME=/home/YOUR_USERNAME"
+ExecStart=/home/YOUR_USERNAME/epaper-dnd/run_dnd_display.sh
 Restart=on-failure
 RestartSec=10
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

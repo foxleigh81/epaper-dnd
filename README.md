@@ -113,31 +113,25 @@ python3 epaper_dnd.py
 
 ### 7. Run on boot (optional)
 
-Edit `run_dnd_display.sh` with your Home Assistant URL and token first. Then install as a user service:
+Edit `run_dnd_display.sh` with your Home Assistant URL and token first.
+
+Then edit `dnd-display.service` and replace `YOUR_USERNAME` with your actual username (run `whoami` to check).
+
+Install as a system service:
 
 ```bash
 chmod +x run_dnd_display.sh
-
-# Create user systemd directory
-mkdir -p ~/.config/systemd/user
-
-# Copy the service file
-cp dnd-display.service ~/.config/systemd/user/
-
-# Reload and enable
-systemctl --user daemon-reload
-systemctl --user enable dnd-display.service
-systemctl --user start dnd-display.service
-
-# Enable lingering so it runs even when not logged in
-loginctl enable-linger $USER
+sudo cp dnd-display.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable dnd-display.service
+sudo systemctl start dnd-display.service
 ```
 
 To check status or logs:
 
 ```bash
-systemctl --user status dnd-display
-journalctl --user -u dnd-display -f
+sudo systemctl status dnd-display
+sudo journalctl -u dnd-display -f
 ```
 
 ## Environment variables
