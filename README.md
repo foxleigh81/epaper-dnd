@@ -121,6 +121,8 @@ python3 epaper_dnd.py
 
 2. Edit `dnd-display.service` and replace `YOUR_USERNAME` with your actual username (run `whoami` to check).
 
+> Note: You can try using the `sed -i "s/YOUR_USERNAME/$(whoami)/g" ~/epaper-dnd/dnd-display.service` command to do this automatically.
+
 3. Install as a system service:
 
 ```bash
