@@ -139,7 +139,7 @@ def render_state_image(width: int, height: int, state: str):
         draw_r.text((ts_x, ts_y), ts_text, font=small_font, fill=1)
 
     else:
-        # Free: black background with white square containing a checkmark
+        # Free: black background with white rounded square containing a checkmark
         draw_b.rectangle((0, 0, width, height), fill=0)
 
         # Square size (similar to circle diameter in DND state)
@@ -147,34 +147,46 @@ def render_state_image(width: int, height: int, state: str):
         cx = width // 2
         cy = height // 2
 
-        # Draw white square
+        # Draw white rounded square
         box_left = cx - box_size // 2
         box_top = cy - box_size // 2
         box_right = cx + box_size // 2
         box_bottom = cy + box_size // 2
-        draw_b.rectangle((box_left, box_top, box_right, box_bottom), fill=1)
+        corner_radius = int(box_size * 0.12)
+        draw_b.rounded_rectangle(
+            (box_left, box_top, box_right, box_bottom),
+            radius=corner_radius,
+            fill=1
+        )
 
         # Draw bold checkmark inside (black on white)
-        margin = int(box_size * 0.15)
-        check_left = box_left + margin
-        check_right = box_right - margin
-        check_top = box_top + margin
-        check_bottom = box_bottom - margin
-        check_width = check_right - check_left
-        check_height = check_bottom - check_top
-
+        # Both legs at 45 degrees for a clean look
+        margin = int(box_size * 0.18)
         line_width = max(8, box_size // 6)
 
-        # Checkmark points (short leg down-right, long leg up-right)
-        x1 = check_left
-        y1 = check_top + check_height * 0.5
-        x2 = check_left + check_width * 0.35
-        y2 = check_bottom
-        x3 = check_right
-        y3 = check_top
+        # Checkmark geometry: short leg (45° down-right), long leg (45° up-right)
+        # The vertex (bottom point) is where both legs meet
+        # Short leg is 1/3 the length of long leg
 
-        draw_b.line((x1, y1, x2, y2), fill=0, width=line_width)
-        draw_b.line((x2, y2, x3, y3), fill=0, width=line_width)
+        inner_width = box_size - 2 * margin
+        inner_height = box_size - 2 * margin
+
+        # Bottom vertex of checkmark (where legs meet)
+        vertex_x = box_left + margin + inner_width * 0.3
+        vertex_y = box_top + margin + inner_height * 0.75
+
+        # Short leg goes up-left at 45° from vertex
+        short_len = inner_width * 0.25
+        x1 = vertex_x - short_len
+        y1 = vertex_y - short_len
+
+        # Long leg goes up-right at 45° from vertex
+        long_len = inner_width * 0.55
+        x3 = vertex_x + long_len
+        y3 = vertex_y - long_len
+
+        draw_b.line((x1, y1, vertex_x, vertex_y), fill=0, width=line_width)
+        draw_b.line((vertex_x, vertex_y, x3, y3), fill=0, width=line_width)
 
         draw_b.text((ts_x, ts_y), ts_text, font=small_font, fill=1)
 
