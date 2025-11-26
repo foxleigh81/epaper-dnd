@@ -25,8 +25,11 @@ import requests
 import websockets
 from PIL import Image, ImageDraw, ImageFont
 
-# Add Waveshare library path
-EPAPER_LIB_PATH = "/home/pi/e-Paper/RaspberryPi_JetsonNano/python/lib"
+# Add Waveshare library path (uses home directory dynamically)
+EPAPER_LIB_PATH = os.path.join(
+    os.path.expanduser("~"),
+    "e-Paper/RaspberryPi_JetsonNano/python/lib"
+)
 if EPAPER_LIB_PATH not in sys.path:
     sys.path.append(EPAPER_LIB_PATH)
 

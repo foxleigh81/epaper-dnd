@@ -7,7 +7,7 @@ This is a companion to the following YouTube video: [placeholder - video not liv
 ## What it does
 
 - Displays a red **no-entry symbol** when you're busy (DND on)
-- Displays a black **FREE** card when you're available (DND off)
+- Displays a **checkbox with checkmark** when you're available (DND off)
 - Shows a **last updated** timestamp so you know it's not frozen
 - Updates in real-time when you toggle the status in Home Assistant
 
@@ -34,14 +34,14 @@ sudo reboot
 ### 2. Install the Waveshare driver
 
 ```bash
-cd /home/pi
+cd ~
 git clone https://github.com/waveshare/e-Paper.git
 ```
 
 Test with:
 
 ```bash
-cd /home/pi/e-Paper/RaspberryPi_JetsonNano/python/examples
+cd ~/e-Paper/RaspberryPi_JetsonNano/python/examples
 sudo python3 epd_7in5bc_test.py
 ```
 
@@ -52,9 +52,9 @@ sudo python3 epd_7in5bc_test.py
 On **Raspberry Pi OS Bookworm** or newer:
 
 ```bash
-cd /home/pi
+cd ~
 python3 -m venv dnd-venv
-source dnd-venv/bin/activate
+source ~/dnd-venv/bin/activate
 pip install pillow requests websockets
 ```
 
@@ -73,9 +73,9 @@ sudo apt install python3-pillow python3-requests python3-websockets
 ### 4. Clone this repository
 
 ```bash
-cd /home/pi
+cd ~
 git clone https://github.com/foxleigh81/epaper-dnd.git
-cd epaper-dnd
+cd ~/epaper-dnd
 ```
 
 ### 5. Set up Home Assistant 
@@ -113,17 +113,32 @@ python3 epaper_dnd.py
 
 ### 7. Run on boot (optional)
 
-Copy the systemd service file and launcher script:
+Edit `run_dnd_display.sh` with your Home Assistant URL and token first. Then install as a user service:
 
 ```bash
 chmod +x run_dnd_display.sh
-sudo cp dnd-display.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable dnd-display
-sudo systemctl start dnd-display
+
+# Create user systemd directory
+mkdir -p ~/.config/systemd/user
+
+# Copy the service file
+cp dnd-display.service ~/.config/systemd/user/
+
+# Reload and enable
+systemctl --user daemon-reload
+systemctl --user enable dnd-display.service
+systemctl --user start dnd-display.service
+
+# Enable lingering so it runs even when not logged in
+loginctl enable-linger $USER
 ```
 
-Edit `run_dnd_display.sh` with your Home Assistant URL and token first. (Unless you added them to your .bashrc file in which case, delete those lines)
+To check status or logs:
+
+```bash
+systemctl --user status dnd-display
+journalctl --user -u dnd-display -f
+```
 
 ## Environment variables
 
@@ -139,7 +154,7 @@ Edit `run_dnd_display.sh` with your Home Assistant URL and token first. (Unless 
 1. The script connects to Home Assistant via WebSocket
 2. It subscribes to state change events for your toggle entity
 3. When the state changes, it redraws the e-Paper display
-4. The display shows either FREE or a no-entry symbol with a timestamp
+4. The display shows either a checkbox (available) or a no-entry symbol (busy) with a timestamp
 
 ## Troubleshooting
 
