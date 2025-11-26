@@ -2,7 +2,7 @@
 
 A DIY "Do Not Disturb" status display using a Raspberry Pi and Waveshare tri-colour e-Paper display, controlled by Home Assistant.
 
-This is a companion to the following YouTube video: [placeholder]
+This is a companion to the following YouTube video: [placeholder - video not live yet]
 
 ## What it does
 
@@ -45,6 +45,8 @@ cd /home/pi/e-Paper/RaspberryPi_JetsonNano/python/examples
 sudo python3 epd_7in5bc_test.py
 ```
 
+> Note: Depending on your display and interface, you may need to test with a different example file
+
 ### 3. Install Python dependencies
 
 On **Raspberry Pi OS Bookworm** or newer:
@@ -62,6 +64,12 @@ On older versions:
 sudo pip3 install pillow requests websockets
 ```
 
+If you don't want to use a python venv, you can also install the dependencies directly with apt:
+
+```bash
+sudo apt install python3-pillow python3-requests python3-websockets
+```
+
 ### 4. Clone this repository
 
 ```bash
@@ -70,7 +78,9 @@ git clone https://github.com/foxleigh81/epaper-dnd.git
 cd epaper-dnd
 ```
 
-### 5. Set up Home Assistant
+### 5. Set up Home Assistant 
+
+> Note: I am assuming an existing Home Assistant installation and some knowledge here.
 
 Create a Toggle helper:
 
@@ -78,12 +88,13 @@ Create a Toggle helper:
 2. Click **+ Create Helper**
 3. Select **Toggle**
 4. Name it `DND Status`
-5. Click **Create**
+5. Set an icon if you want to
+6. Click **Create**
 
 Create a long-lived access token:
 
 1. Click your username in Home Assistant
-2. Scroll to the **Security** section
+2. Click on the **Security** tab
 3. Under **Long-Lived Access Tokens**, click **Create Token**
 4. Copy the token (you won't see it again)
 
@@ -92,8 +103,8 @@ Create a long-lived access token:
 ```bash
 export HA_BASE_URL="http://YOUR_HA_IP:8123"
 export HA_TOKEN="your-long-lived-token"
-export HA_ENTITY_ID="input_boolean.dnd_status"
-export HA_MIN_REFRESH_SECONDS=10
+export HA_ENTITY_ID="input_boolean.dnd_status" (or whatever you called it)
+export HA_MIN_REFRESH_SECONDS=10 (or whatever you want it to be)
 
 python3 epaper_dnd.py
 ```
@@ -133,17 +144,11 @@ Edit `run_dnd_display.sh` with your Home Assistant URL and token first.
 **Display not updating:**
 - Check SPI is enabled: `ls /dev/spidev*`
 - Ensure the HAT is connected properly (pin 1 to pin 1)
-- Run the Waveshare test script first
+- Run the Waveshare test script first (As mentioned earlier, the one I used may not work for you so try the others too)
 
 **Connection errors:**
 - Verify your Home Assistant URL is reachable
 - Check the long-lived token is valid
 - Ensure the entity ID matches your helper
 
-**Python errors on Bookworm:**
-- Make sure you're using a virtual environment
-- Activate it with `source /home/pi/dnd-venv/bin/activate`
-
-## Licence
-
-MIT
+For more smart home and homelab stuff, make sure you subscribe to [Foxy's Lab](https://www.youtube.com/@foxyslab)! 
