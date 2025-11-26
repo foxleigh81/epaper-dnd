@@ -1,13 +1,9 @@
 #!/bin/bash
 #
 # Launcher script for E-Paper DND Display
-# Edit the values below with your Home Assistant details
+# Environment variables are loaded from dnd-display.env by systemd
+# If running manually, source the env file first or set the variables in your shell
 #
-
-export HA_BASE_URL="http://YOUR_HA_IP:8123"
-export HA_TOKEN="your-long-lived-token-here"
-export HA_ENTITY_ID="input_boolean.dnd_status"
-export HA_MIN_REFRESH_SECONDS=10
 
 cd "$HOME/epaper-dnd"
 

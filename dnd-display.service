@@ -7,6 +7,7 @@ Wants=network-online.target
 # Replace YOUR_USERNAME with your actual username (run 'whoami' to check)
 User=YOUR_USERNAME
 Environment="HOME=/home/YOUR_USERNAME"
+EnvironmentFile=/home/YOUR_USERNAME/epaper-dnd/dnd-display.env
 ExecStart=/home/YOUR_USERNAME/epaper-dnd/run_dnd_display.sh
 Restart=on-failure
 RestartSec=10
