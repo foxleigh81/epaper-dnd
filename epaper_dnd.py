@@ -166,27 +166,28 @@ def render_state_image(width: int, height: int, state: str):
 
         # Checkmark geometry: short leg (45° down-right), long leg (45° up-right)
         # The vertex (bottom point) is where both legs meet
-        # Short leg is 1/3 the length of long leg
+        # Short leg is 1/2 the length of long leg
 
         inner_width = box_size - 2 * margin
-        inner_height = box_size - 2 * margin
+
+        # Long leg length and short leg is half of that
+        long_len = inner_width * 0.55
+        short_len = long_len * 0.5
 
         # Bottom vertex of checkmark (where legs meet)
-        vertex_x = box_left + margin + inner_width * 0.3
-        vertex_y = box_top + margin + inner_height * 0.75
+        vertex_x = box_left + margin + inner_width * 0.35
+        vertex_y = box_top + margin + inner_width * 0.75
 
         # Short leg goes up-left at 45° from vertex
-        short_len = inner_width * 0.25
         x1 = vertex_x - short_len
         y1 = vertex_y - short_len
 
         # Long leg goes up-right at 45° from vertex
-        long_len = inner_width * 0.55
         x3 = vertex_x + long_len
         y3 = vertex_y - long_len
 
-        draw_b.line((x1, y1, vertex_x, vertex_y), fill=0, width=line_width)
-        draw_b.line((vertex_x, vertex_y, x3, y3), fill=0, width=line_width)
+        # Draw as a single polyline so the vertex joins cleanly
+        draw_b.line((x1, y1, vertex_x, vertex_y, x3, y3), fill=0, width=line_width, joint="curve")
 
         draw_b.text((ts_x, ts_y), ts_text, font=small_font, fill=1)
 
