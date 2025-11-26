@@ -265,6 +265,8 @@ async def ha_dnd_listener(epd, stop_event: asyncio.Event):
                     display_state(epd, current_state)
                     last_refresh = now
 
+        except asyncio.CancelledError:
+            break
         except Exception as e:
             if stop_event.is_set():
                 break
@@ -303,7 +305,7 @@ async def main():
         task.cancel()
         try:
             await task
-        except Exception:
+        except (asyncio.CancelledError, Exception):
             pass
         if epd:
             try:
